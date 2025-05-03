@@ -71,13 +71,13 @@ export default function AboutSection() {
     { 
       id: "passion", 
       title: "My Passion",
-      icon: <Lightbulb className="w-5 h-5" />, 
+    icon: <Lightbulb className="w-5 h-5" />, 
       content: "I'm especially passionate about building applications and platforms that have a positive impact on society and make everyday life easier. I continuously build and launch SaaS websites and mobile apps, always thinking about how technology can simplify complex problems."
-    },
-    { 
+  },
+  { 
       id: "ai", 
       title: "AI & ML",
-      icon: <Brain className="w-5 h-5" />, 
+    icon: <Brain className="w-5 h-5" />, 
       content: "AI fascinates me, and it's my college minor. I'm actively learning machine learning and artificial intelligence, and I have a long list of project ideas that combine web, mobile, and AI. I truly believe that merging these three domains can lead to billion-dollar companies—and more importantly, solutions that create real value."
     },
     { 
@@ -89,7 +89,7 @@ export default function AboutSection() {
     { 
       id: "inspiration", 
       title: "Inspiration",
-      icon: <Rocket className="w-5 h-5" />, 
+    icon: <Rocket className="w-5 h-5" />, 
       content: "Some of the rare but inspiring movies I've enjoyed include The Social Network, The Pursuit of Happyness, and Bhaag Milkha Bhaag—stories that fuel my drive. These narratives of determination and vision continue to shape my approach to challenges."
     }
   ]
@@ -122,7 +122,7 @@ export default function AboutSection() {
         {/* Code Pattern Background */}
         <div className="absolute inset-0 opacity-[0.02] bg-[url('/code-pattern.svg')] bg-repeat bg-center" />
       </div>
-      
+
       <div className="container mx-auto px-4 sm:px-6" ref={containerRef}>
         <motion.div 
           className="text-center mb-12 md:mb-16"
@@ -137,8 +137,8 @@ export default function AboutSection() {
             <span className="inline-block px-3 py-1 text-sm rounded-full bg-primary/10 text-primary mb-4 backdrop-blur-sm border border-primary/10">
               ABOUT ME
             </span>
-          </motion.div>
-          
+        </motion.div>
+
           <motion.h2 
             className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-500 via-blue-500 to-indigo-500"
             initial={{ opacity: 0, y: 20 }}
@@ -175,7 +175,7 @@ export default function AboutSection() {
             <div className="bg-card/60 backdrop-blur-sm border border-border p-8 md:p-10 rounded-xl shadow-xl relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
               
-              <motion.div
+              <motion.div 
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
@@ -210,12 +210,12 @@ export default function AboutSection() {
                   <Sparkles className="w-5 h-5 mr-2 text-primary" />
                   What Drives Me
                 </h3>
-                
-                <motion.div 
+              
+              <motion.div 
                   className="flex flex-wrap gap-2 mb-6"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
                   {interests.map((interest, index) => (
@@ -237,13 +237,13 @@ export default function AboutSection() {
                       {interest.title}
                     </motion.button>
                   ))}
-                </motion.div>
-                
-                <motion.div 
+              </motion.div>
+              
+              <motion.div 
                   className="bg-background/40 backdrop-blur-md rounded-xl p-6 border border-border relative overflow-hidden"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.4 }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
@@ -291,11 +291,11 @@ export default function AboutSection() {
                         <span className="text-primary font-medium">Personal:</span>{" "}
                         {displayedText}
                         {isTyping && <span className="text-primary animate-pulse">|</span>}
-                      </motion.div>
+              </motion.div>
                     )}
-                    
+              
                     {tab === "inspiration" && (
-                      <motion.div
+                <motion.div
                         key="inspiration"
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -351,7 +351,7 @@ export default function AboutSection() {
           </motion.div>
           
           {/* Education & Market Insights Section */}
-          <motion.div 
+            <motion.div
             className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -407,10 +407,10 @@ export default function AboutSection() {
                 <span>I will keep building and launching until I reach my dream valuation</span>
               </div>
             </div>
-          </motion.div>
-          
+            </motion.div>
+            
           {/* Vision Statement */}
-          <motion.div 
+            <motion.div 
             className="mt-8 text-center px-4 py-8 bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-indigo-500/10 backdrop-blur-sm rounded-2xl border border-primary/10"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}

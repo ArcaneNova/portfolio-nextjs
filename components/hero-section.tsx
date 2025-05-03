@@ -294,7 +294,7 @@ export default function HeroSection() {
             scale: { duration: 1, delay: item.delay },
             rotate: { 
               duration: item.duration, 
-              repeat: Infinity,
+            repeat: Infinity,
               ease: "linear" 
             },
             x: { type: "spring", damping: 25, stiffness: 100 },

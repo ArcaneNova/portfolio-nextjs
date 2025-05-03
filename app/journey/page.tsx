@@ -225,10 +225,10 @@ export default function JourneyPage() {
               <Link href="/#journey">
                 <ChevronLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
                 <span>Back to Homepage</span>
-              </Link>
-            </Button>
-          </div>
-
+        </Link>
+      </Button>
+      </div>
+      
           {/* Journey timeline with enhanced animations */}
           <div className="container mx-auto px-4" ref={containerRef}>
             <div className="mb-16">
@@ -257,13 +257,13 @@ export default function JourneyPage() {
                   const isActive = activeIndex === index;
 
                   return (
-                    <motion.div
+          <motion.div
                       ref={ref}
-                      key={item.year}
+            key={item.year}
                       className={`relative flex flex-col md:flex-row items-center md:items-start gap-8 my-24 md:my-32 ${
                         isEven ? "md:flex-row" : "md:flex-row-reverse text-right"
-                      }`}
-                      initial={{ opacity: 0, y: 50 }}
+            }`}
+            initial={{ opacity: 0, y: 50 }}
                       animate={inView ? { opacity: 1, y: 0 } : {}}
                       transition={{ duration: 0.7 }}
                       onMouseEnter={() => setActiveIndex(index)}
@@ -319,17 +319,17 @@ export default function JourneyPage() {
                           }`}
                         >
                           <span className="inline-block px-3 py-1 text-sm rounded-full bg-primary/10 text-primary mb-2">
-                            {item.year}
-                          </span>
+                {item.year}
+              </span>
                           <h4 className="text-xl font-bold mb-3">{item.title}</h4>
-                          <p className="text-muted-foreground mb-4">{item.description}</p>
+              <p className="text-muted-foreground mb-4">{item.description}</p>
                           <div className="flex items-center gap-2 text-sm font-medium text-primary">
                             <Trophy className="h-4 w-4" />
                             <span>{item.achievement}</span>
                           </div>
                         </motion.div>
-                      </div>
-
+            </div>
+            
                       {/* Image section with enhanced hover effects */}
                       <div className="w-full md:w-5/12">
                         <motion.div
@@ -364,7 +364,7 @@ export default function JourneyPage() {
                 })}
               </div>
             </div>
-
+            
             {/* Skills section with glass morphism */}
             <div className="mt-32 mb-16">
               <motion.div 
@@ -452,8 +452,8 @@ export default function JourneyPage() {
               </div>
               <div className="absolute -bottom-8 right-10 text-primary/10 -rotate-12">
                 <Quote className="w-12 h-12" />
-              </div>
-              
+      </div>
+      
               <div className="relative z-10 bg-gradient-to-br from-purple-900/30 via-blue-900/30 to-indigo-900/30 backdrop-blur-md rounded-2xl p-2 overflow-hidden shadow-xl">
                 <div className="absolute top-0 left-0 w-full h-full bg-[url('/code-pattern.svg')] bg-repeat opacity-[0.03]" />
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-blue-500 to-indigo-500" />
@@ -505,7 +505,7 @@ export default function JourneyPage() {
                 </Button>
                 <Button asChild variant="outline" size="lg" className="backdrop-blur-sm bg-background/40 hover:bg-background/60 border-primary/20 hover:border-primary/40 shadow-lg transition-all duration-300">
                   <Link href="/contact">Get In Touch</Link>
-                </Button>
+        </Button>
               </div>
             </motion.div>
           </div>

@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { motion } from "@/lib/framer-exports"
+import { motion } from "framer-motion"
 import { Trophy, Award, Medal, Star } from "lucide-react"
 import type { Achievement, AchievementsResponse } from "@/lib/models/achievement"
 import { Button } from "@/components/ui/button"

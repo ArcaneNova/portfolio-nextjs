@@ -25,8 +25,7 @@ import {
   LayoutGroup,
   useIsPresent,
   usePresence,
-  MotionValue,
-  type AnimationProps
+  MotionValue
 } from 'framer-motion';
 
 // Re-export all individually to avoid "export *"
@@ -54,11 +53,8 @@ export {
   LayoutGroup,
   useIsPresent,
   usePresence,
-  MotionValue,
+  MotionValue
 };
-
-// Export types separately
-export type { AnimationProps };
 
 // Common variants
 export const fadeIn = {
