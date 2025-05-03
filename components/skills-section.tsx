@@ -16,7 +16,8 @@ import {
   Terminal,
   CircuitBoard,
   PanelLeft,
-  Container
+  Container,
+  Box
 } from "lucide-react"
 
 interface SkillCategory {
@@ -78,18 +79,18 @@ const skillCategories: SkillCategory[] = [
 
 // Tech stack with icons from Lucide
 const techStack = [
-  { name: "JavaScript", icon: <FileCode className="w-7 h-7 text-yellow-400" />, color: "text-yellow-400/20" },
-  { name: "TypeScript", icon: <FileCode className="w-7 h-7 text-blue-400" />, color: "text-blue-400/20" },
-  { name: "React", icon: <CircuitBoard className="w-7 h-7 text-sky-400" />, color: "text-sky-400/20" },
-  { name: "Next.js", icon: <PanelLeft className="w-7 h-7 text-neutral-100" />, color: "text-neutral-100/20" },
-  { name: "Node.js", icon: <Server className="w-7 h-7 text-green-500" />, color: "text-green-500/20" },
-  { name: "Python", icon: <Terminal className="w-7 h-7 text-blue-500" />, color: "text-blue-500/20" },
-  { name: "MongoDB", icon: <Database className="w-7 h-7 text-green-600" />, color: "text-green-600/20" },
-  { name: "PostgreSQL", icon: <Database className="w-7 h-7 text-blue-600" />, color: "text-blue-600/20" },
-  { name: "AWS", icon: <Cloud className="w-7 h-7 text-amber-400" />, color: "text-amber-400/20" },
-  { name: "Docker", icon: <Container className="w-7 h-7 text-blue-400" />, color: "text-blue-400/20" },
-  { name: "Git", icon: <GitBranch className="w-7 h-7 text-orange-500" />, color: "text-orange-500/20" },
-  { name: "Tailwind", icon: <Braces className="w-7 h-7 text-cyan-400" />, color: "text-cyan-400/20" },
+  { name: "JavaScript", icon: <FileCode className="w-7 h-7 text-yellow-400" />, colorClass: "hover:bg-yellow-400/10" },
+  { name: "TypeScript", icon: <FileCode className="w-7 h-7 text-blue-400" />, colorClass: "hover:bg-blue-400/10" },
+  { name: "React", icon: <CircuitBoard className="w-7 h-7 text-sky-400" />, colorClass: "hover:bg-sky-400/10" },
+  { name: "Next.js", icon: <PanelLeft className="w-7 h-7 text-neutral-100" />, colorClass: "hover:bg-neutral-100/10" },
+  { name: "Node.js", icon: <Server className="w-7 h-7 text-green-500" />, colorClass: "hover:bg-green-500/10" },
+  { name: "Python", icon: <Terminal className="w-7 h-7 text-blue-500" />, colorClass: "hover:bg-blue-500/10" },
+  { name: "MongoDB", icon: <Database className="w-7 h-7 text-green-600" />, colorClass: "hover:bg-green-600/10" },
+  { name: "PostgreSQL", icon: <Database className="w-7 h-7 text-blue-600" />, colorClass: "hover:bg-blue-600/10" },
+  { name: "AWS", icon: <Cloud className="w-7 h-7 text-amber-400" />, colorClass: "hover:bg-amber-400/10" },
+  { name: "Docker", icon: <Box className="w-7 h-7 text-blue-400" />, colorClass: "hover:bg-blue-400/10" },
+  { name: "Git", icon: <GitBranch className="w-7 h-7 text-orange-500" />, colorClass: "hover:bg-orange-500/10" },
+  { name: "Tailwind", icon: <Braces className="w-7 h-7 text-cyan-400" />, colorClass: "hover:bg-cyan-400/10" },
 ]
 
 // Animation variants
@@ -245,7 +246,7 @@ export default function SkillsSection() {
               variants={fadeInUp}
               whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
             >
-              <div className={`w-16 h-16 bg-background/50 backdrop-blur-sm rounded-2xl p-3 shadow-lg border border-border mb-2 flex items-center justify-center hover:bg-${tech.color} transition-colors duration-300`}>
+              <div className={`w-16 h-16 bg-background/50 backdrop-blur-sm rounded-2xl p-3 shadow-lg border border-border mb-2 flex items-center justify-center ${tech.colorClass} transition-colors duration-300`}>
                 {tech.icon}
               </div>
               <span className="text-xs text-muted-foreground">{tech.name}</span>

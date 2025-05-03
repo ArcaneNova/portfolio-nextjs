@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/build-netlify.js",
+    "build": "next build",
+    "postbuild": "node scripts/build-netlify.js",
     "start": "next start",
     "lint": "next lint"
   },
