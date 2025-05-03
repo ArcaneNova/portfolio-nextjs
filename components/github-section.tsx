@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
+import { motion } from "@/lib/framer-exports"
 
 // This would normally be fetched from the GitHub API
 const generateMockContributions = () => {

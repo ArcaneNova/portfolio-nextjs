@@ -1,14 +1,10 @@
-import { Metadata } from "next";
+"use client"
+
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "@/lib/framer-exports";
-
-export const metadata: Metadata = {
-  title: "Photos Gallery | Md Arshad Noor",
-  description: "A collection of my best photos and memories captured over the years.",
-};
 
 // This would come from MongoDB in production
 const photos = [

@@ -1,6 +1,7 @@
 // This file provides named exports for framer-motion
 // to avoid the "export *" error in Next.js client boundaries
 
+// Import specific components and functions instead of using wildcard exports
 import {
   motion,
   AnimatePresence,

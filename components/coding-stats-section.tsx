@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { motion } from "@/lib/framer-exports"
 import { Code, FileCode, GitPullRequest, Award } from "lucide-react"
 import type { CodingStat, StatsResponse } from "@/lib/models/stats"
 import { Button } from "@/components/ui/button"
