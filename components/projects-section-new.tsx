@@ -72,7 +72,7 @@ export default function ProjectsSection() {
       description: "A machine learning platform that predicts electricity demand for the Indian power grid using LSTM models and real-time data analysis.",
       image: "/placeholder.jpg",
       technologies: ["Python", "TensorFlow", "FastAPI", "React", "AWS"],
-      github: "https://github.com/md-arshad-noor/energy-forecasting",
+      github: "https://github.com/arcanenova/energy-forecasting",
       liveUrl: "https://energy-forecast.arshadnoor.me",
       category: "AI/ML Projects",
       featured: true,
@@ -84,7 +84,7 @@ export default function ProjectsSection() {
       description: "A grassroots platform connecting farmers directly with street vendors, eliminating middlemen and ensuring fair prices for both parties.",
       image: "/placeholder.jpg",
       technologies: ["Next.js", "Node.js", "MongoDB", "Socket.io", "Stripe"],
-      github: "https://github.com/md-arshad-noor/farmer-marketplace",
+      github: "https://github.com/arcanenova/farmer-marketplace",
       liveUrl: "https://farmer-connect.arshadnoor.me",
       category: "SaaS Products",
       featured: true,
@@ -96,7 +96,7 @@ export default function ProjectsSection() {
       description: "An intelligent voice automation system using OpenAI APIs for natural language processing and task automation.",
       image: "/placeholder.jpg", 
       technologies: ["Python", "OpenAI API", "FastAPI", "WebRTC", "React"],
-      github: "https://github.com/md-arshad-noor/voice-ai",
+      github: "https://github.com/arcanenova/voice-ai",
       liveUrl: "https://voice-ai.arshadnoor.me",
       category: "AI/ML Projects",
       featured: false,
@@ -108,7 +108,7 @@ export default function ProjectsSection() {
       description: "Computer vision application using MoveNet for real-time human pose detection and fitness tracking.",
       image: "/placeholder.jpg",
       technologies: ["JavaScript", "TensorFlow.js", "WebGL", "React Native"],
-      github: "https://github.com/md-arshad-noor/pose-detection",
+      github: "https://github.com/arcanenova/pose-detection",
       liveUrl: "https://pose-tracker.arshadnoor.me",
       category: "Mobile Apps",
       featured: false,
@@ -120,7 +120,7 @@ export default function ProjectsSection() {
       description: "A comprehensive analytics platform for SaaS businesses with real-time metrics, user tracking, and revenue insights.",
       image: "/placeholder.jpg",
       technologies: ["React", "D3.js", "Node.js", "PostgreSQL", "Redis"],
-      github: "https://github.com/md-arshad-noor/saas-analytics",
+      github: "https://github.com/arcanenova/saas-analytics",
       liveUrl: "https://analytics-pro.arshadnoor.me",
       category: "SaaS Products",
       featured: true,
@@ -132,7 +132,7 @@ export default function ProjectsSection() {
       description: "A secure, transparent voting platform built on blockchain technology to ensure election integrity and trust.",
       image: "/placeholder.jpg",
       technologies: ["Solidity", "Web3.js", "React", "Node.js", "IPFS"],
-      github: "https://github.com/md-arshad-noor/blockchain-voting",
+      github: "https://github.com/arcanenova/blockchain-voting",
       liveUrl: "https://secure-vote.arshadnoor.me",
       category: "Web Apps",
       featured: false,
@@ -420,7 +420,7 @@ export default function ProjectsSection() {
                 variant="outline"
                 className="border-2 border-purple-500/50 text-purple-300 hover:bg-purple-500/10 px-8 py-6 text-lg rounded-full"
               >
-                <Link href="https://github.com/md-arshad-noor" target="_blank" rel="noopener noreferrer">
+                <Link href="https://github.com/arcanenova" target="_blank" rel="noopener noreferrer">
                   <Github className="w-5 h-5 mr-2" />
                   View All on GitHub
                   <ExternalLink className="w-4 h-4 ml-2" />

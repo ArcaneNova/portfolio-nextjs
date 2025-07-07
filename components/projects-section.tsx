@@ -333,7 +333,7 @@ export default function ProjectsSection() {
           <div className="text-center py-20">
             <div className="mb-6 text-gray-400 text-6xl">📝</div>
             <p className="text-gray-400 mb-4 text-xl">No projects found</p>
-            <p className="text-gray-500">No projects match the selected category</p>
+            <p className="text-gray-500">I have not added projects yet, please check my github for project repos!</p>
           </div>
         ) : (
           <>
