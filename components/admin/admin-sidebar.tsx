@@ -12,6 +12,7 @@ import {
   LogOut,
   Menu,
   X,
+  Rocket,
 } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -26,6 +27,11 @@ const navItems = [
     title: "Projects",
     href: "/admin/projects",
     icon: FolderKanban,
+  },
+  {
+    title: "Launches",
+    href: "/admin/launches",
+    icon: Rocket,
   },
   {
     title: "Challenges",

@@ -16,7 +16,18 @@ const config: Config = {
         "2xl": "1400px",
       },
     },
+    screens: {
+      'xs': '475px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
     extend: {
+      fontFamily: {
+        'space-grotesk': ['var(--font-space-grotesk)', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -50,6 +61,22 @@ const config: Config = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        // Cyberpunk color palette
+        cyber: {
+          cyan: '#00ffff',
+          purple: '#bf40ff',
+          blue: '#4da6ff',
+          green: '#00ff00',
+          pink: '#ff80ff',
+          orange: '#ff8000',
+        },
+        neon: {
+          cyan: '#00ffff',
+          purple: '#bf40ff',
+          blue: '#4da6ff',
+          green: '#00ff00',
+          pink: '#ff80ff',
         },
       },
       borderRadius: {

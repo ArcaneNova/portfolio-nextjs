@@ -38,6 +38,34 @@ export async function connect() {
   return mongoose.connect(uri);
 }
 
+// More reliable connection for API routes
+export async function connectToDB() {
+  try {
+    // If already connected, return the existing connection
+    if (mongoose.connection.readyState >= 1) {
+      return;
+    }
+    
+    // Set strict query to avoid deprecation warnings
+    mongoose.set('strictQuery', true);
+    
+    // Connect with options
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s
+      maxPoolSize: 10, // Maintain up to 10 socket connections
+    });
+    
+    console.log("MongoDB connected successfully");
+    
+  } catch (error) {
+    console.error("MongoDB connection failed:", error);
+    // Try to reconnect once after a short delay
+    console.log("Attempting to reconnect...");
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    return mongoose.connect(uri);
+  }
+}
+
 export default clientPromise
 
 export async function getCollection(collectionName: string) {

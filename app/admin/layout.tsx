@@ -71,8 +71,7 @@ const sidebarItems = [
 ];
 
 // In a real app, this would be fetched from a secure API
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "portfolio2025";
+// Removed hardcoded credentials - now using database authentication
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -80,7 +79,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
 
@@ -93,20 +92,40 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     setIsLoading(false);
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-      localStorage.setItem("admin-auth", "true");
-      setIsAuthenticated(true);
-      toast({
-        title: "Login successful",
-        description: "Welcome to the admin dashboard",
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       });
-    } else {
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        localStorage.setItem("admin-auth", "true");
+        localStorage.setItem("admin-data", JSON.stringify(data.admin));
+        setIsAuthenticated(true);
+        toast({
+          title: "Login successful",
+          description: `Welcome back, ${data.admin.name}`,
+        });
+      } else {
+        toast({
+          title: "Login failed",
+          description: data.error || "Invalid email or password",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
       toast({
         title: "Login failed",
-        description: "Invalid username or password",
+        description: "An error occurred during login. Please try again.",
         variant: "destructive",
       });
     }
@@ -114,6 +133,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const handleLogout = () => {
     localStorage.removeItem("admin-auth");
+    localStorage.removeItem("admin-data");
     setIsAuthenticated(false);
     router.push("/admin");
     toast({
@@ -142,15 +162,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <form onSubmit={handleLogin}>
             <div className="space-y-4">
               <div>
-                <label htmlFor="username" className="block text-sm font-medium mb-1">
-                  Username
+                <label htmlFor="email" className="block text-sm font-medium mb-1">
+                  Email
                 </label>
                 <input
-                  id="username"
-                  type="text"
+                  id="email"
+                  type="email"
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
                   required
                 />
               </div>
@@ -165,6 +186,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
                   required
                 />
               </div>

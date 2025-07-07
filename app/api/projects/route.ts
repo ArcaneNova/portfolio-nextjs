@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 
     // Build query
     let query: any = {}
-    if (category && category !== "all") {
+    if (category && category.toLowerCase() !== "all") {
       query.category = category
     }
     if (featured === "true") {
