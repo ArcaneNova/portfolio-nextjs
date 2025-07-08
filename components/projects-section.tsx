@@ -389,7 +389,7 @@ export default function ProjectsSection() {
                   variant="outline"
                   className="border-2 border-purple-500/50 text-purple-300 hover:bg-purple-500/10 hover:border-purple-400 px-10 py-6 text-lg rounded-full transition-all duration-300 group"
                 >
-                  <Link href="https://github.com/md-arshad-noor" target="_blank" rel="noopener noreferrer">
+                  <Link href="https://github.com/arcanenova" target="_blank" rel="noopener noreferrer">
                     <Github className="w-5 h-5 mr-3" />
                     View All on GitHub
                     <ExternalLink className="w-4 h-4 ml-3 group-hover:translate-x-1 transition-transform duration-300" />

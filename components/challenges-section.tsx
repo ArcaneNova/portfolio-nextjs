@@ -14,30 +14,40 @@ export default function ChallengesSection() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [hoveredCard, setHoveredCard] = useState<string | null>(null)
+  const [isHydrated, setIsHydrated] = useState(false)
 
   useEffect(() => {
-    const fetchChallenges = async () => {
-      try {
-        setIsLoading(true)
-        const response = await fetch("/api/challenges?limit=2") // Limiting to 2 for the homepage
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch challenges")
-        }
-
-        const data: ChallengesResponse = await response.json()
-        setChallenges(data.challenges)
-        setError(null)
-      } catch (err) {
-        console.error("Error fetching challenges:", err)
-        setError("Failed to load challenges. Please try again later.")
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchChallenges()
+    setIsHydrated(true)
   }, [])
+
+  useEffect(() => {
+    // Delay API call slightly to improve hydration
+    const timer = setTimeout(() => {
+      fetchChallenges()
+    }, 100)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  const fetchChallenges = async () => {
+    try {
+      setIsLoading(true)
+      const response = await fetch("/api/challenges?limit=2") // Limiting to 2 for the homepage
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch challenges")
+      }
+
+      const data: ChallengesResponse = await response.json()
+      setChallenges(data.challenges)
+      setError(null)
+    } catch (err) {
+      console.error("Error fetching challenges:", err)
+      setError("Failed to load challenges. Please try again later.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   // Decorative elements for background
   const decorativeElements = Array.from({ length: 5 }, (_, i) => ({
@@ -247,9 +257,13 @@ export default function ChallengesSection() {
                 onHoverStart={() => setHoveredCard(challenge._id || null)}
                 onHoverEnd={() => setHoveredCard(null)}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-blue-500/0 to-indigo-500/5 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                {/* Background gradient overlay with improved contrast */}
+                <div 
+                  className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-blue-500/5 to-indigo-500/10 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+                />
                 
-                <div className="relative h-48 overflow-hidden">
+                {/* Card media top section */}
+                <div className="relative h-52 overflow-hidden">
                   <motion.div
                     initial={{ scale: 1 }}
                     whileHover={{ scale: 1.05 }}
@@ -264,54 +278,57 @@ export default function ChallengesSection() {
                     />
                   </motion.div>
                   
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end">
+                  {/* Text overlay on image */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-black/20 flex items-end">
                     <div className="p-6">
-                      <motion.h3 
-                        className="text-xl font-bold text-white mb-1 flex items-center"
+                      <motion.div 
                         initial={{ opacity: 0.9, y: 0 }}
                         whileHover={{ opacity: 1, y: -2 }}
                         transition={{ duration: 0.3 }}
                       >
-                        <Award className="h-5 w-5 mr-2 text-purple-400" />
-                        {challenge.title}
-                      </motion.h3>
-                      <p className="text-white/80">{challenge.description}</p>
+                        <h3 className="text-xl font-bold text-white mb-1.5 flex items-center">
+                          <Award className="h-5 w-5 mr-2 text-purple-400" />
+                          {challenge.title}
+                        </h3>
+                      </motion.div>
+                      <p className="text-white/80 line-clamp-2 text-sm md:text-base">{challenge.description}</p>
                     </div>
                   </div>
                   
-                  {hoveredCard === challenge._id && (
-                    <motion.div
-                      className="absolute top-3 right-3 bg-primary/90 text-white text-xs font-medium px-2 py-1 rounded-full"
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <div className="flex items-center">
-                        <Sparkles className="h-3 w-3 mr-1" />
-                        Featured
-                      </div>
-                    </motion.div>
-                  )}
+                  {/* Badge */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8, x: -5 }}
+                    animate={{ opacity: 1, scale: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.3 }}
+                    className="absolute top-3 left-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs font-medium px-2.5 py-1 rounded-full shadow-md"
+                  >
+                    <div className="flex items-center">
+                      <Sparkles className="h-3 w-3 mr-1" />
+                      {challenge.totalDays}-Day Challenge
+                    </div>
+                  </motion.div>
                 </div>
 
+                {/* Card content */}
                 <div className="p-6 relative z-10">
-                  <div className="flex justify-between items-center mb-4">
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      Started: {new Date(challenge.startDate).toLocaleDateString()}
+                  {/* Meta section */}
+                  <div className="flex flex-wrap gap-3 mb-4">
+                    <div className="flex items-center text-xs md:text-sm text-muted-foreground">
+                      <Calendar className="h-3.5 w-3.5 mr-1 flex-shrink-0" />
+                      <span className="truncate">Started: {new Date(challenge.startDate).toLocaleDateString()}</span>
                     </div>
                     <motion.div 
-                      className="flex items-center text-sm font-medium px-2 py-1 rounded-full bg-primary/10 text-primary"
+                      className="flex items-center text-xs md:text-sm font-medium px-2 py-1 rounded-full bg-primary/10 text-primary"
                       whileHover={{ y: -2 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Clock className="h-3.5 w-3.5 mr-1" />
-                      Day {challenge.currentDay} of {challenge.totalDays}
+                      <Clock className="h-3 w-3 mr-1 flex-shrink-0" />
+                      <span>Day {challenge.currentDay} of {challenge.totalDays}</span>
                     </motion.div>
                   </div>
 
-                  <div className="w-full h-2 bg-muted rounded-full mb-6 overflow-hidden">
+                  {/* Progress bar */}
+                  <div className="w-full h-2.5 bg-muted rounded-full mb-5 overflow-hidden">
                     <motion.div
                       className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
                       style={{ width: "0%" }}
@@ -320,82 +337,96 @@ export default function ChallengesSection() {
                     />
                   </div>
 
+                  {/* Latest update section with improved spacing and readability */}
                   {challenge.latestUpdate ? (
                     <motion.div 
-                      className="mb-4"
+                      className="mb-5"
                       initial={{ opacity: 0, y: 10 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: 0.6 }}
                     >
-                      <h4 className="font-medium mb-2 flex items-center">
-                        <TrendingUp className="h-4 w-4 mr-1 text-green-500" />
-                        Latest Update: Day {challenge.latestUpdate.day}
-                      </h4>
-                      <div className="flex items-center text-sm text-muted-foreground mb-2">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        {new Date(challenge.latestUpdate.date).toLocaleDateString()}
+                      <div className="border-l-2 border-primary/30 pl-3 py-1">
+                        <h4 className="font-medium mb-1.5 flex items-center text-sm md:text-base">
+                          <TrendingUp className="h-4 w-4 mr-1.5 text-primary" />
+                          Latest Update: Day {challenge.latestUpdate.day}
+                        </h4>
+                        
+                        <div className="flex items-center text-xs text-muted-foreground mb-2">
+                          <Calendar className="h-3.5 w-3.5 mr-1" />
+                          {new Date(challenge.latestUpdate.date).toLocaleDateString()}
+                        </div>
+                        
+                        <p className="font-medium text-primary mb-1.5 text-sm">{challenge.latestUpdate.topic}</p>
+                        
+                        <AnimatePresence mode="wait">
+                          <motion.div 
+                            key={expandedId === challenge._id ? 'expanded' : 'collapsed'}
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="overflow-hidden"
+                          >
+                            <p className="text-xs md:text-sm text-muted-foreground">
+                              {expandedId === challenge._id
+                                ? challenge.latestUpdate.description
+                                : `${challenge.latestUpdate.description.substring(0, 100)}...`}
+                            </p>
+                          </motion.div>
+                        </AnimatePresence>
+                        
+                        {challenge.latestUpdate.description.length > 100 && (
+                          <motion.button
+                            onClick={(e) => {
+                              e.preventDefault(); // Prevent link navigation
+                              setExpandedId(expandedId === challenge._id ? null : challenge._id || null);
+                            }}
+                            className="text-xs md:text-sm text-primary hover:underline mt-2 flex items-center"
+                            whileHover={{ x: expandedId === challenge._id ? -2 : 2 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            {expandedId === challenge._id ? (
+                              <>Show less</>
+                            ) : (
+                              <>Read more<ChevronRight className="h-3 w-3 ml-0.5" /></>
+                            )}
+                          </motion.button>
+                        )}
                       </div>
-                      <p className="font-medium text-primary mb-1">{challenge.latestUpdate.topic}</p>
-                      
-                      <AnimatePresence mode="wait">
-                        <motion.p 
-                          key={expandedId === challenge._id ? 'expanded' : 'collapsed'}
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="text-sm text-muted-foreground overflow-hidden"
-                        >
-                          {expandedId === challenge._id
-                            ? challenge.latestUpdate.description
-                            : `${challenge.latestUpdate.description.substring(0, 100)}...`}
-                        </motion.p>
-                      </AnimatePresence>
-                      
-                      {challenge.latestUpdate.description.length > 100 && (
-                        <motion.button
-                          onClick={() => setExpandedId(expandedId === challenge._id ? null : challenge._id || null)}
-                          className="text-sm text-primary hover:underline mt-1 flex items-center"
-                          whileHover={{ x: expandedId === challenge._id ? -2 : 2 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          {expandedId === challenge._id ? (
-                            <>Show less</>
-                          ) : (
-                            <>Read more<ChevronRight className="h-3 w-3 ml-0.5" /></>
-                          )}
-                        </motion.button>
-                      )}
                     </motion.div>
                   ) : (
-                    <div className="mb-4">
+                    <div className="mb-5">
                       <p className="text-sm text-muted-foreground">No updates yet</p>
                     </div>
                   )}
 
-                  <motion.div
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Button asChild className="bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600 w-full">
-                      <Link href={`/journey/challenges/${challenge._id}`} className="flex items-center justify-center">
-                        View Full Challenge
-                        <motion.div
-                          animate={{ x: [0, 5, 0] }}
-                          transition={{ 
-                            duration: 1,
-                            repeat: Infinity,
-                            repeatType: "loop",
-                            repeatDelay: 1
-                          }}
-                        >
-                          <ChevronRight className="h-4 w-4 ml-1" />
-                        </motion.div>
-                      </Link>
-                    </Button>
-                  </motion.div>
+                  {/* Action button with improved hover state */}
+                  <Link href={`/journey/challenges/${challenge._id ? challenge._id.toString() : ''}/`} passHref>
+                    <motion.div
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ duration: 0.2 }}
+                      className="block w-full"
+                    >
+                      <Button className="bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600 w-full">
+                        <span className="flex items-center justify-center">
+                          View Full Challenge
+                          <motion.div
+                            animate={{ x: [0, 5, 0] }}
+                            transition={{ 
+                              duration: 1,
+                              repeat: Infinity,
+                              repeatType: "loop",
+                              repeatDelay: 1
+                            }}
+                          >
+                            <ChevronRight className="h-4 w-4 ml-1.5" />
+                          </motion.div>
+                        </span>
+                      </Button>
+                    </motion.div>
+                  </Link>
                 </div>
               </motion.div>
             ))}

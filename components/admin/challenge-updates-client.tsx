@@ -306,7 +306,7 @@ export function ChallengeUpdatesClient({
               </Link>
             </Button>
             <Button asChild>
-              <Link href={`/journey/challenges/${challenge._id}`} target="_blank">
+              <Link href={`/journey/challenges/${challenge._id ? challenge._id.toString() : ''}/`} target="_blank">
                 View Public Page
               </Link>
             </Button>

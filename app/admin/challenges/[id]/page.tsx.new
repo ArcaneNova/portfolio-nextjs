@@ -1,0 +1,37 @@
+import { connect } from "@/lib/db";
+import ChallengeModel from "@/lib/models/challenge";
+import type { Challenge } from "@/lib/models/challenge";
+import { redirect } from "next/navigation";
+import ChallengeEditClient from "@/components/admin/challenge-edit-client";
+
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+async function getChallenge(id: string): Promise<Challenge | null> {
+  await connect();
+  try {
+    const challenge = await ChallengeModel.findById(id).lean();
+    
+    if (!challenge) {
+      return null;
+    }
+    
+    return JSON.parse(JSON.stringify(challenge)) as Challenge;
+  } catch (error) {
+    console.error("Error fetching challenge:", error);
+    return null;
+  }
+}
+
+export default async function ChallengeEditPage({ params }: PageProps) {
+  const challenge = await getChallenge(params.id);
+  
+  if (!challenge) {
+    redirect("/admin/challenges");
+  }
+  
+  return <ChallengeEditClient challenge={challenge} />;
+}
