@@ -72,13 +72,9 @@ export default function RecentLaunchesSection() {
   useEffect(() => {
     const fetchLaunches = async () => {
       try {
-        // Add a cache-busting parameter
-        const timestamp = new Date().getTime();
-        const res = await fetch(`/api/launches?t=${timestamp}`, {
+        const res = await fetch(`/api/launches`, {
           method: "GET",
-          headers: {
-            "Cache-Control": "no-cache",
-          },
+          cache: "no-store",
         });
         
         if (!res.ok) {
@@ -98,22 +94,7 @@ export default function RecentLaunchesSection() {
       }
     };
 
-    // Try to fetch with a retry mechanism
-    const fetchWithRetry = async (retries = 2, delay = 1000) => {
-      try {
-        await fetchLaunches();
-      } catch (err) {
-        if (retries > 0) {
-          console.log(`Retrying fetch... (${retries} attempts left)`);
-          setTimeout(() => fetchWithRetry(retries - 1, delay * 1.5), delay);
-        } else {
-          setIsLoading(false);
-          setLaunches([]);
-        }
-      }
-    };
-    
-    fetchWithRetry();
+    fetchLaunches();
   }, []);
 
   return (

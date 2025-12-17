@@ -142,6 +142,30 @@ export default function JourneyPage() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
   const [scrollY, setScrollY] = useState(0);
+  const [journey, setJourney] = useState<JourneyItem[]>(journeyData);
+  const [isLoadingJourney, setIsLoadingJourney] = useState(true);
+
+  // Fetch journey data from API
+  useEffect(() => {
+    const fetchJourney = async () => {
+      try {
+        const response = await fetch("/api/journey");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.journey && data.journey.length > 0) {
+            setJourney(data.journey);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching journey:", error);
+        // Use fallback journeyData
+      } finally {
+        setIsLoadingJourney(false);
+      }
+    };
+
+    fetchJourney();
+  }, []);
 
   // Parallax scroll effect
   useEffect(() => {
@@ -247,7 +271,7 @@ export default function JourneyPage() {
                 {/* Central line for desktop - enhanced with glow effect */}
                 <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-purple-500 via-blue-500 to-indigo-500 rounded-full shadow-[0_0_15px_rgba(107,70,193,0.5)]" />
 
-                {journeyData.map((item, index) => {
+                {journey.map((item, index) => {
                   const [ref, inView] = useInView({
                     triggerOnce: true,
                     threshold: 0.1,

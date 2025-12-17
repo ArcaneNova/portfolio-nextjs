@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Plus, Pencil, Eye, Trash, CheckCircle, XCircle } from "lucide-react"
 import { format } from "date-fns"
+import { useToast } from "@/hooks/use-toast"
 
 interface Photo {
   _id?: string
@@ -31,8 +32,11 @@ interface PhotosClientProps {
   photos: Photo[]
 }
 
-export function PhotosClient({ photos }: PhotosClientProps) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+export function PhotosClient({ photos: initialPhotos }: PhotosClientProps) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [photos, setPhotos] = useState<Photo[]>(initialPhotos)
+  const [isDeleting, setIsDeleting] = useState<string | null>(null)
+  const { toast } = useToast()
   
   useEffect(() => {
     // Check if user is authenticated in localStorage
@@ -45,6 +49,39 @@ export function PhotosClient({ photos }: PhotosClientProps) {
   // If not authenticated, show nothing (the layout will handle the login screen)
   if (!isAuthenticated) {
     return null;
+  }
+
+  const handleDelete = async (photoId: string | undefined) => {
+    if (!photoId) return
+    if (!confirm("Are you sure you want to delete this photo?")) {
+      return
+    }
+
+    try {
+      setIsDeleting(photoId)
+      const response = await fetch(`/api/photos/${photoId}`, {
+        method: "DELETE",
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to delete photo")
+      }
+
+      setPhotos(photos.filter((p) => p._id !== photoId))
+      toast({
+        title: "Success",
+        description: "Photo deleted successfully",
+      })
+    } catch (error) {
+      console.error("Delete error:", error)
+      toast({
+        title: "Error",
+        description: "Failed to delete photo",
+        variant: "destructive",
+      })
+    } finally {
+      setIsDeleting(null)
+    }
   }
   
   // Get unique categories
@@ -159,6 +196,8 @@ export function PhotosClient({ photos }: PhotosClientProps) {
                   <Button
                     variant="destructive"
                     size="sm"
+                    onClick={() => handleDelete(photo._id)}
+                    disabled={isDeleting === photo._id}
                   >
                     <Trash className="h-4 w-4 mr-1" /> Delete
                   </Button>

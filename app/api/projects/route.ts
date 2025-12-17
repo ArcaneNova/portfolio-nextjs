@@ -3,6 +3,7 @@ import { connect } from "@/lib/db"
 import { getCollection, ObjectId } from "@/lib/db"
 import ProjectModel from "@/lib/models/project"
 import { uploadImage } from "@/lib/cloudinary"
+import { requireAuth } from "@/lib/middleware"
 
 export async function GET(req: NextRequest) {
   try {
@@ -48,26 +49,55 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  // Check authentication first
+  const auth = await requireAuth(req)
+  if (!auth.valid) {
+    return NextResponse.json(
+      { error: auth.error || "Unauthorized" },
+      { status: 401 }
+    )
+  }
+
   try {
     await connect()
 
     const formData = await req.formData()
     
-    const title = formData.get("title") as string
-    const description = formData.get("description") as string
-    const github = formData.get("github") as string
-    const demo = formData.get("demo") as string
-    const category = formData.get("category") as string
-    const details = formData.get("details") as string
+    const title = formData.get("title")
+    const description = formData.get("description")
+    const github = formData.get("github")
+    const demo = formData.get("demo")
+    const category = formData.get("category")
+    const details = formData.get("details")
     const featured = formData.get("featured") === "true"
-    const tags = JSON.parse(formData.get("tags") as string || "[]")
+    
+    // Validate required fields
+    if (
+      typeof title !== "string" || !title.trim() ||
+      typeof description !== "string" || !description.trim() ||
+      typeof category !== "string" || !category.trim()
+    ) {
+      return NextResponse.json(
+        { error: "Missing or invalid required fields" },
+        { status: 400 }
+      )
+    }
+    
+    const tags = (() => {
+      try {
+        const tagsStr = formData.get("tags")
+        return typeof tagsStr === "string" ? JSON.parse(tagsStr) : []
+      } catch {
+        return []
+      }
+    })()
     
     // Handle image upload
-    const imageFile = formData.get("image") as File
+    const imageFile = formData.get("image")
     
-    if (!title || !description || !category || !imageFile) {
+    if (!(imageFile instanceof File)) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Image file is required" },
         { status: 400 }
       )
     }
@@ -102,6 +132,15 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  // Check authentication first
+  const auth = await requireAuth(req)
+  if (!auth.valid) {
+    return NextResponse.json(
+      { error: auth.error || "Unauthorized" },
+      { status: 401 }
+    )
+  }
+
   try {
     await connect()
 
@@ -138,6 +177,15 @@ export async function PATCH(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  // Check authentication first
+  const auth = await requireAuth(req)
+  if (!auth.valid) {
+    return NextResponse.json(
+      { error: auth.error || "Unauthorized" },
+      { status: 401 }
+    )
+  }
+
   try {
     await connect()
 

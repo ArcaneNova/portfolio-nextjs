@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import clientPromise from "@/lib/db";
 import { getCollection } from "@/lib/db";
 import { v2 as cloudinary } from "cloudinary";
+import { requireAuth } from "@/lib/middleware";
 
 // Configure Cloudinary
 cloudinary.config({
@@ -53,16 +53,31 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  // Check authentication first
+  const auth = await requireAuth(req)
+  if (!auth.valid) {
+    return NextResponse.json(
+      { error: auth.error || "Unauthorized" },
+      { status: 401 }
+    )
+  }
+
   try {
     const formData = await req.formData();
-    const title = formData.get("title") as string;
-    const caption = formData.get("caption") as string;
-    const category = formData.get("category") as string;
-    const file = formData.get("file") as File;
+    const title = formData.get("title")
+    const caption = formData.get("caption")
+    const category = formData.get("category")
+    const file = formData.get("file")
     
-    if (!title || !caption || !category || !file) {
+    // Validate required fields
+    if (
+      typeof title !== "string" || !title.trim() ||
+      typeof caption !== "string" || !caption.trim() ||
+      typeof category !== "string" || !category.trim() ||
+      !(file instanceof File)
+    ) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Missing or invalid required fields" },
         { status: 400 }
       );
     }

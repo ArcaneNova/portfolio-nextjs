@@ -1,10 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
-    ignoreBuildErrors: true,
+    // Set to true to fail build on TypeScript errors
+    ignoreBuildErrors: false,
+  },
+  eslint: {
+    // Set to true to fail build on ESLint errors
+    ignoreDuringBuilds: false,
   },
   images: {
     unoptimized: true,
@@ -12,15 +14,6 @@ const nextConfig = {
   },
   // Add trailingSlash: true to help with path resolution
   trailingSlash: true,
-  // Configure rewrites for paths that might be causing issues
-  async rewrites() {
-    return [
-      {
-        source: '/journey/challenges/:id',
-        destination: '/journey/challenges/:id',
-      },
-    ];
-  },
 }
 
 export default nextConfig

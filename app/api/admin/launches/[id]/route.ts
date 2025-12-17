@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/lib/db";
 import Launch from "@/lib/models/launch";
-import { auth } from "@/lib/auth"; // Assuming you have auth setup
 import { uploadImage } from "@/lib/cloudinary";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
     await connectToDB();
     const launch = await Launch.findById(id);
@@ -27,7 +26,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication - uncomment and adjust based on your auth setup
@@ -36,7 +35,7 @@ export async function PUT(
     //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     // }
     
-    const { id } = params;
+    const { id } = await params;
     await connectToDB();
     
     // Check if the launch exists
@@ -113,7 +112,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication - uncomment and adjust based on your auth setup
@@ -122,7 +121,7 @@ export async function DELETE(
     //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     // }
     
-    const { id } = params;
+    const { id } = await params;
     await connectToDB();
     
     const deletedLaunch = await Launch.findByIdAndDelete(id);

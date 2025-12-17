@@ -2,10 +2,21 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest) {
   try {
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       message: "Logout successful",
     })
+
+    // Clear the auth cookie
+    response.cookies.set('admin-token', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 0,
+      path: '/',
+    })
+
+    return response
   } catch (error) {
     console.error("Logout error:", error)
     return NextResponse.json(

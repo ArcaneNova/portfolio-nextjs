@@ -37,7 +37,7 @@ export default function Footer() {
                 <Github className="h-5 w-5" />
               </a>
               <a
-                href="https://linkedin.com/"
+                href="https://linkedin.com/in/mdarshadnoor"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
@@ -46,16 +46,16 @@ export default function Footer() {
                 <Linkedin className="h-5 w-5" />
               </a>
               <a
-                href="https://twitter.com/"
+                href="https://x.com/Arcanerise"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
-                aria-label="Twitter"
+                aria-label="X"
               >
                 <Twitter className="h-5 w-5" />
               </a>
               <a
-                href="https://instagram.com/"
+                href="https://instagram.com/arshadnoor.me"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"

@@ -30,13 +30,17 @@ import {
   Github,
   Trash,
 } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
 
 interface ProjectsClientProps {
   projects: Project[]
 }
 
-export function ProjectsClient({ projects }: ProjectsClientProps) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+export function ProjectsClient({ projects: initialProjects }: ProjectsClientProps) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [projects, setProjects] = useState<Project[]>(initialProjects)
+  const [isDeleting, setIsDeleting] = useState<string | null>(null)
+  const { toast } = useToast()
   
   useEffect(() => {
     // Check if user is authenticated in localStorage
@@ -49,6 +53,38 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
   // If not authenticated, show nothing (the layout will handle the login screen)
   if (!isAuthenticated) {
     return null;
+  }
+
+  const handleDelete = async (projectId: string) => {
+    if (!confirm("Are you sure you want to delete this project?")) {
+      return
+    }
+
+    try {
+      setIsDeleting(projectId)
+      const response = await fetch(`/api/projects/${projectId}`, {
+        method: "DELETE",
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to delete project")
+      }
+
+      setProjects(projects.filter((p) => p._id !== projectId))
+      toast({
+        title: "Success",
+        description: "Project deleted successfully",
+      })
+    } catch (error) {
+      console.error("Delete error:", error)
+      toast({
+        title: "Error",
+        description: "Failed to delete project",
+        variant: "destructive",
+      })
+    } finally {
+      setIsDeleting(null)
+    }
   }
   
   const featuredProjects = projects.filter((project) => project.featured)
@@ -125,12 +161,14 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
                     <TableRow key={project._id}>
                       <TableCell>
                         <div className="relative h-12 w-12 rounded-md overflow-hidden">
-                          <Image
-                            src={project.image}
-                            alt={project.title}
-                            fill
-                            className="object-cover"
-                          />
+                          {project.image && (
+                            <Image
+                              src={project.image}
+                              alt={project.title}
+                              fill
+                              className="object-cover"
+                            />
+                          )}
                         </div>
                       </TableCell>
                       <TableCell className="font-medium">{project.title}</TableCell>
@@ -175,7 +213,12 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
                               <Pencil className="h-4 w-4" />
                             </Link>
                           </Button>
-                          <Button variant="destructive" size="icon">
+                          <Button 
+                            variant="destructive" 
+                            size="icon"
+                            onClick={() => handleDelete(project._id as string)}
+                            disabled={isDeleting === project._id}
+                          >
                             <Trash className="h-4 w-4" />
                           </Button>
                         </div>

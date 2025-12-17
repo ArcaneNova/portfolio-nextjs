@@ -10,7 +10,7 @@ export async function GET() {
       .limit(6); // Limit to 6 recent launches
     
     // Transform the data to include all fields including status
-    const transformedLaunches = launches.map(launch => ({
+    const transformedLaunches = launches.map((launch: any) => ({
       id: launch._id.toString(),
       title: launch.title,
       description: launch.description,

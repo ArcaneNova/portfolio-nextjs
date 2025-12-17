@@ -38,7 +38,7 @@ const adminSchema = new mongoose.Schema({
   },
 });
 
-adminSchema.pre("save", function (next) {
+adminSchema.pre("save", function (next: any) {
   this.updatedAt = new Date();
   next();
 });

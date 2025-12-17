@@ -12,13 +12,14 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, ChevronLeft, Clock, TrendingUp, Award, ArrowRight } from "lucide-react";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const challenge = await getChallenge(params.id);
+  const { id } = await params;
+  const challenge = await getChallenge(id);
   
   if (!challenge) {
     return {
@@ -65,7 +66,7 @@ export async function generateStaticParams() {
   await connect();
   try {
     const challenges = await ChallengeModel.find({}).lean();
-    return challenges.map(challenge => ({
+    return challenges.map((challenge: any) => ({
       id: challenge._id.toString()
     }));
   } catch (error) {
@@ -75,7 +76,8 @@ export async function generateStaticParams() {
 }
 
 export default async function ChallengePage({ params }: PageProps) {
-  const challenge = await getChallenge(params.id);
+  const { id } = await params;
+  const challenge = await getChallenge(id);
   
   if (!challenge) {
     notFound();

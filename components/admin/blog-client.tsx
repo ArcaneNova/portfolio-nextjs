@@ -22,6 +22,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Plus, Pencil, Eye, Trash, CheckCircle, XCircle } from "lucide-react"
 import { format } from "date-fns"
+import { useToast } from "@/hooks/use-toast"
 
 interface BlogPost {
   _id?: string
@@ -42,8 +43,11 @@ interface BlogClientProps {
   posts: BlogPost[]
 }
 
-export function BlogClient({ posts }: BlogClientProps) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+export function BlogClient({ posts: initialPosts }: BlogClientProps) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [posts, setPosts] = useState<BlogPost[]>(initialPosts)
+  const [isDeleting, setIsDeleting] = useState<string | null>(null)
+  const { toast } = useToast()
   
   useEffect(() => {
     // Check if user is authenticated in localStorage
@@ -56,6 +60,39 @@ export function BlogClient({ posts }: BlogClientProps) {
   // If not authenticated, show nothing (the layout will handle the login screen)
   if (!isAuthenticated) {
     return null;
+  }
+
+  const handleDelete = async (postId: string | undefined) => {
+    if (!postId) return
+    if (!confirm("Are you sure you want to delete this blog post?")) {
+      return
+    }
+
+    try {
+      setIsDeleting(postId)
+      const response = await fetch(`/api/blog/${postId}`, {
+        method: "DELETE",
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to delete blog post")
+      }
+
+      setPosts(posts.filter((p) => p._id !== postId))
+      toast({
+        title: "Success",
+        description: "Blog post deleted successfully",
+      })
+    } catch (error) {
+      console.error("Delete error:", error)
+      toast({
+        title: "Error",
+        description: "Failed to delete blog post",
+        variant: "destructive",
+      })
+    } finally {
+      setIsDeleting(null)
+    }
   }
   
   // Get unique categories
@@ -185,7 +222,12 @@ export function BlogClient({ posts }: BlogClientProps) {
                               <Eye className="h-4 w-4" />
                             </Link>
                           </Button>
-                          <Button variant="destructive" size="icon">
+                          <Button 
+                            variant="destructive" 
+                            size="icon"
+                            onClick={() => handleDelete(post._id)}
+                            disabled={isDeleting === post._id}
+                          >
                             <Trash className="h-4 w-4" />
                           </Button>
                         </div>

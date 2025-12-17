@@ -7,5 +7,31 @@ import {
 } from 'next-themes'
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>
+  React.useEffect(() => {
+    // Ensure the theme is properly applied on mount
+    const theme = localStorage.getItem('theme') || 'dark'
+    const html = document.documentElement
+    
+    if (theme === 'dark') {
+      html.classList.add('dark')
+    } else {
+      html.classList.remove('dark')
+    }
+  }, [])
+
+  return (
+    <NextThemesProvider 
+      attribute="class"
+      defaultTheme="dark"
+      enableSystem={false}
+      disableTransitionOnChange
+      storageKey="theme"
+      enableColorScheme={false}
+      themes={['dark']}
+      forcedTheme="dark"
+      {...props}
+    >
+      {children}
+    </NextThemesProvider>
+  )
 }

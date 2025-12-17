@@ -1,75 +1,63 @@
-import { MongoClient, ObjectId } from "mongodb"
 import mongoose from "mongoose"
+import { MongoClient, ObjectId } from "mongodb"
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"')
 }
 
 const uri = process.env.MONGODB_URI
-const options = {}
-
-let client
-let clientPromise: Promise<MongoClient>
-
-if (process.env.NODE_ENV === "development") {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
-  const globalWithMongo = global as typeof globalThis & {
-    _mongoClientPromise?: Promise<MongoClient>
-  }
-
-  if (!globalWithMongo._mongoClientPromise) {
-    client = new MongoClient(uri, options)
-    globalWithMongo._mongoClientPromise = client.connect()
-  }
-  clientPromise = globalWithMongo._mongoClientPromise
-} else {
-  // In production mode, it's best to not use a global variable.
-  client = new MongoClient(uri, options)
-  clientPromise = client.connect()
-}
 
 // For Mongoose models
+let mongooseConnection: typeof mongoose | null = null
+
 export async function connect() {
   if (mongoose.connection.readyState >= 1) {
-    return;
+    return mongoose.connection
   }
   
-  return mongoose.connect(uri);
+  return mongoose.connect(uri, {
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    maxPoolSize: 10,
+  })
 }
 
-// More reliable connection for API routes
+// Alias for consistency
 export async function connectToDB() {
-  try {
-    // If already connected, return the existing connection
-    if (mongoose.connection.readyState >= 1) {
-      return;
-    }
-    
-    // Set strict query to avoid deprecation warnings
-    mongoose.set('strictQuery', true);
-    
-    // Connect with options
-    await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 5000, // Timeout after 5s
-      maxPoolSize: 10, // Maintain up to 10 socket connections
-    });
-    
-    console.log("MongoDB connected successfully");
-    
-  } catch (error) {
-    console.error("MongoDB connection failed:", error);
-    // Try to reconnect once after a short delay
-    console.log("Attempting to reconnect...");
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    return mongoose.connect(uri);
-  }
+  return connect()
 }
 
-export default clientPromise
+// For legacy raw MongoDB operations - create a MongoClient
+let client: MongoClient | null = null
+let clientPromise: Promise<MongoClient> | null = null
+
+async function getMongoClient(): Promise<MongoClient> {
+  if (client) {
+    return client
+  }
+
+  if (clientPromise) {
+    return clientPromise
+  }
+
+  client = new MongoClient(uri, {
+    maxPoolSize: 10,
+    serverSelectionTimeoutMS: 5000,
+  })
+
+  clientPromise = client.connect()
+  return clientPromise
+}
 
 export async function getCollection(collectionName: string) {
-  const client = await clientPromise
+  // Use Mongoose connection if available for consistency
+  if (mongoose.connection.readyState >= 1) {
+    const db = mongoose.connection.getClient().db("portfolio")
+    return db.collection(collectionName)
+  }
+
+  // Fallback to raw MongoClient
+  const client = await getMongoClient()
   const db = client.db("portfolio")
   return db.collection(collectionName)
 }

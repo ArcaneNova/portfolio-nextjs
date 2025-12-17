@@ -1,17 +1,23 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { connectToDB } from "@/lib/db";
 import Launch from "@/lib/models/launch";
-import { auth } from "@/lib/auth"; // Assuming you have auth setup
+import { requireAuth } from "@/lib/middleware";
 import { uploadImage } from "@/lib/cloudinary";
 
 export async function POST(request: Request) {
-  try {
-    // Check authentication - uncomment and adjust based on your auth setup
-    // const session = await auth();
-    // if (!session?.user || session.user.role !== "admin") {
-    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    // }
+  // Convert to NextRequest for auth checking
+  const req = request as unknown as NextRequest;
+  
+  // Check authentication
+  const auth = await requireAuth(req);
+  if (!auth.valid) {
+    return NextResponse.json(
+      { error: auth.error || "Unauthorized" },
+      { status: 401 }
+    );
+  }
 
+  try {
     await connectToDB();
     
     // Check if the request is multipart/form-data
@@ -21,18 +27,30 @@ export async function POST(request: Request) {
       // Handle form data with file upload
       const formData = await request.formData();
       
-      const title = formData.get("title") as string;
-      const description = formData.get("description") as string;
-      const projectUrl = formData.get("projectUrl") as string;
-      const launchDateStr = formData.get("launchDate") as string;
+      const title = formData.get("title")
+      const description = formData.get("description")
+      const projectUrl = formData.get("projectUrl")
+      const launchDateStr = formData.get("launchDate")
       const featured = formData.get("featured") === "true";
-      const status = formData.get("status") as "Launched" | "Launching Soon";
-      const tags = JSON.parse(formData.get("tags") as string || "[]");
-      const imageFile = formData.get("image") as File | null;
+      const status = formData.get("status")
+      const tags = (() => {
+        try {
+          const tagsStr = formData.get("tags")
+          return typeof tagsStr === "string" ? JSON.parse(tagsStr) : []
+        } catch {
+          return []
+        }
+      })()
+      const imageFile = formData.get("image")
       
-      if (!title || !description || !projectUrl) {
+      // Validate required fields
+      if (
+        typeof title !== "string" || !title.trim() ||
+        typeof description !== "string" || !description.trim() ||
+        typeof projectUrl !== "string" || !projectUrl.trim()
+      ) {
         return NextResponse.json(
-          { error: "Missing required fields" },
+          { error: "Missing or invalid required fields" },
           { status: 400 }
         );
       }
@@ -51,7 +69,7 @@ export async function POST(request: Request) {
         imageUrl = (uploadResult as any).secure_url;
       }
       
-      const launchDate = launchDateStr ? new Date(launchDateStr) : new Date();
+      const launchDate = (launchDateStr && typeof launchDateStr === "string") ? new Date(launchDateStr) : new Date();
       
       const newLaunch = new Launch({
         title,

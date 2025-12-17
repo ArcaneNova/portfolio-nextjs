@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Plus, Pencil, Trash } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
 
 interface Achievement {
   _id?: string
@@ -34,8 +35,11 @@ interface AchievementsClientProps {
   achievements: Achievement[]
 }
 
-export function AchievementsClient({ achievements }: AchievementsClientProps) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+export function AchievementsClient({ achievements: initialAchievements }: AchievementsClientProps) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [achievements, setAchievements] = useState<Achievement[]>(initialAchievements)
+  const [isDeleting, setIsDeleting] = useState<string | null>(null)
+  const { toast } = useToast()
   
   useEffect(() => {
     // Check if user is authenticated in localStorage
@@ -48,6 +52,39 @@ export function AchievementsClient({ achievements }: AchievementsClientProps) {
   // If not authenticated, show nothing (the layout will handle the login screen)
   if (!isAuthenticated) {
     return null;
+  }
+
+  const handleDelete = async (achievementId: string | undefined) => {
+    if (!achievementId) return
+    if (!confirm("Are you sure you want to delete this achievement?")) {
+      return
+    }
+
+    try {
+      setIsDeleting(achievementId)
+      const response = await fetch(`/api/achievements/${achievementId}`, {
+        method: "DELETE",
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to delete achievement")
+      }
+
+      setAchievements(achievements.filter((a) => a._id !== achievementId))
+      toast({
+        title: "Success",
+        description: "Achievement deleted successfully",
+      })
+    } catch (error) {
+      console.error("Delete error:", error)
+      toast({
+        title: "Error",
+        description: "Failed to delete achievement",
+        variant: "destructive",
+      })
+    } finally {
+      setIsDeleting(null)
+    }
   }
   
   return (
@@ -127,7 +164,12 @@ export function AchievementsClient({ achievements }: AchievementsClientProps) {
                               <Pencil className="h-4 w-4" />
                             </Link>
                           </Button>
-                          <Button variant="destructive" size="icon">
+                          <Button 
+                            variant="destructive" 
+                            size="icon"
+                            onClick={() => handleDelete(achievement._id)}
+                            disabled={isDeleting === achievement._id}
+                          >
                             <Trash className="h-4 w-4" />
                           </Button>
                         </div>

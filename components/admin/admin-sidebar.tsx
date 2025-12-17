@@ -13,6 +13,11 @@ import {
   Menu,
   X,
   Rocket,
+  Code,
+  BarChart3,
+  Link as LinkIcon,
+  Route,
+  Users,
 } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -24,19 +29,20 @@ const navItems = [
     icon: LayoutDashboard,
   },
   {
+    title: "Content",
+    href: "#",
+    icon: FileText,
+    isHeader: true,
+  },
+  {
     title: "Projects",
     href: "/admin/projects",
     icon: FolderKanban,
   },
   {
-    title: "Launches",
-    href: "/admin/launches",
-    icon: Rocket,
-  },
-  {
-    title: "Challenges",
-    href: "/admin/challenges",
-    icon: Trophy,
+    title: "Blog",
+    href: "/admin/blog",
+    icon: FileText,
   },
   {
     title: "Achievements",
@@ -44,19 +50,60 @@ const navItems = [
     icon: Trophy,
   },
   {
-    title: "Messages",
-    href: "/admin/messages",
-    icon: MessageSquare,
-  },
-  {
     title: "Photos",
     href: "/admin/photos",
     icon: ImageIcon,
   },
   {
-    title: "Resume",
-    href: "/admin/resume",
+    title: "Challenges",
+    href: "/admin/challenges",
+    icon: Trophy,
+  },
+  {
+    title: "Launches",
+    href: "/admin/launches",
+    icon: Rocket,
+  },
+  {
+    title: "Skills",
+    href: "/admin/skills",
+    icon: Code,
+  },
+  {
+    title: "Tools",
+    href: "/admin/tools",
+    icon: Code,
+  },
+  {
+    title: "System",
+    href: "#",
     icon: FileText,
+    isHeader: true,
+  },
+  {
+    title: "Stats",
+    href: "/admin/stats",
+    icon: BarChart3,
+  },
+  {
+    title: "Platforms",
+    href: "/admin/platforms",
+    icon: LinkIcon,
+  },
+  {
+    title: "Journeys",
+    href: "/admin/journeys",
+    icon: Route,
+  },
+  {
+    title: "Resumes",
+    href: "/admin/resumes",
+    icon: FileText,
+  },
+  {
+    title: "Messages",
+    href: "/admin/messages",
+    icon: MessageSquare,
   },
 ]
 
@@ -91,6 +138,13 @@ export default function AdminSidebar() {
 
           <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
             {navItems.map((item) => {
+              if (item.isHeader) {
+                return (
+                  <div key={item.href} className="px-4 py-3 mt-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    {item.title}
+                  </div>
+                )
+              }
               const isActive = pathname === item.href
               return (
                 <Link

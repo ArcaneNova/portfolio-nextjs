@@ -2,16 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/lib/db";
 import ChallengeModel from "@/lib/models/challenge";
 import { uploadImage } from "@/lib/cloudinary";
+import { requireAuth } from "@/lib/middleware";
 
 interface Params {
   id: string;
 }
 
-export async function GET(req: NextRequest, { params }: { params: Params }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<Params> }) {
   try {
     await connect();
     
-    const { id } = params;
+    const { id } = await params;
     console.log(`API: Attempting to fetch challenge with ID: ${id}`);
     
     let challenge;
@@ -42,11 +43,11 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
   }
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: Params }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<Params> }) {
   try {
     await connect();
     
-    const { id } = params;
+    const { id } = await params;
     const formData = await req.formData();
     
     const challenge = await ChallengeModel.findById(id);
@@ -97,11 +98,20 @@ export async function PATCH(req: NextRequest, { params }: { params: Params }) {
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: Params }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<Params> }) {
+  // Check authentication first
+  const auth = await requireAuth(req)
+  if (!auth.valid) {
+    return NextResponse.json(
+      { error: auth.error || "Unauthorized" },
+      { status: 401 }
+    )
+  }
+
   try {
     await connect();
     
-    const { id } = params;
+    const { id } = await params;
     
     const result = await ChallengeModel.findByIdAndDelete(id);
     

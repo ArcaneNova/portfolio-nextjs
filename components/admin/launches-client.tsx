@@ -97,13 +97,9 @@ export default function LaunchesClient() {
   const fetchLaunches = async () => {
     try {
       setLoading(true);
-      // Add a cache-busting parameter to prevent stale data
-      const timestamp = new Date().getTime();
-      const res = await fetch(`/api/admin/launches?t=${timestamp}`, {
+      const res = await fetch(`/api/admin/launches`, {
         method: "GET",
-        headers: {
-          "Cache-Control": "no-cache",
-        },
+        cache: "no-store",
       });
       
       if (!res.ok) {

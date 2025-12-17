@@ -47,12 +47,20 @@ async function getContentSummary(): Promise<SummaryData> {
 
     const projects = await projectsCollection.countDocuments()
     const challenges = await challengesCollection.countDocuments()
-    const activeChallengesTodo = await challengesCollection.countDocuments({ status: "active" }) // TODO: Check actual field name
+    // Get active challenges count
+    const activeChallenges = await challengesCollection.countDocuments({ 
+      $or: [
+        { status: "active" },
+        { status: "in-progress" },
+        { status: "ongoing" }
+      ]
+    })
     const achievements = await achievementsCollection.countDocuments()
     const blogs = await blogsCollection.countDocuments()
     const photos = await photosCollection.countDocuments()
     const messages = await messagesCollection.countDocuments()
-    const unreadMessagesTodo = await messagesCollection.countDocuments({ read: false }) // TODO: Check actual field name
+    // Get unread messages count
+    const unreadMessages = await messagesCollection.countDocuments({ read: false })
 
     const latestProject = await projectsCollection.find().sort({ createdAt: -1 }).limit(1).toArray()
     const latestChallenge = await challengesCollection.find().sort({ createdAt: -1 }).limit(1).toArray()
@@ -71,7 +79,7 @@ async function getContentSummary(): Promise<SummaryData> {
       },
       challenges: {
         count: challenges,
-        active: activeChallengesTodo, // Using the placeholder count
+        active: activeChallenges,
         latest: latestChallenge.length > 0 ? {
           title: latestChallenge[0]?.title || "Untitled Challenge",
           createdAt: latestChallenge[0]?.createdAt || new Date()
@@ -100,7 +108,7 @@ async function getContentSummary(): Promise<SummaryData> {
       },
       messages: {
         count: messages,
-        unread: unreadMessagesTodo, // Using the placeholder count
+        unread: unreadMessages,
         latest: latestMessage.length > 0 ? {
           name: latestMessage[0]?.name || "Anonymous",
           createdAt: latestMessage[0]?.createdAt || new Date()

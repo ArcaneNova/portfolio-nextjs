@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/lib/db";
 import BlogPost from "@/lib/models/blog";
+import { requireAuth } from "@/lib/middleware";
 
 export async function GET(req: NextRequest) {
   try {
@@ -44,37 +45,56 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  // Check authentication first
+  const auth = await requireAuth(req)
+  if (!auth.valid) {
+    return NextResponse.json(
+      { error: auth.error || "Unauthorized" },
+      { status: 401 }
+    )
+  }
+
   try {
     await connect();
 
     const body = await req.json();
-    const { title, content, excerpt, category, imageUrl, author, tags } = body;
+    const { title, content, excerpt, slug, category, imageUrl, author, tags, published, date } = body;
 
-    // Create a slug from the title
-    const slug = title
-      .toLowerCase()
-      .replace(/[^\w\s]/gi, "")
-      .replace(/\s+/g, "-");
+    // Validate required fields
+    if (
+      typeof title !== "string" || !title.trim() ||
+      typeof content !== "string" || !content.trim() ||
+      typeof excerpt !== "string" || !excerpt.trim() ||
+      typeof slug !== "string" || !slug.trim() ||
+      typeof category !== "string" || !category.trim() ||
+      typeof imageUrl !== "string" || !imageUrl.trim()
+    ) {
+      return NextResponse.json(
+        { error: "Missing or invalid required fields" },
+        { status: 400 }
+      );
+    }
 
     // Check if slug already exists
     const existingPost = await BlogPost.findOne({ slug });
-    
-    // If slug exists, append a unique identifier
-    const finalSlug = existingPost
-      ? `${slug}-${Date.now().toString().slice(-4)}`
-      : slug;
+    if (existingPost) {
+      return NextResponse.json(
+        { error: "A post with this slug already exists" },
+        { status: 400 }
+      );
+    }
 
     const newPost = await BlogPost.create({
       title,
       content,
       excerpt,
-      slug: finalSlug,
+      slug,
       category,
       imageUrl,
       author,
-      tags: tags || [],
-      published: true,
-      date: new Date(),
+      tags: Array.isArray(tags) ? tags : [],
+      published: typeof published === "boolean" ? published : false,
+      date: date ? new Date(date) : new Date(),
     });
 
     return NextResponse.json(newPost, { status: 201 });

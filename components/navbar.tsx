@@ -3,13 +3,11 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
+import { Menu, X } from "lucide-react"
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,9 +51,6 @@ export default function Navbar() {
             <Link href="/#contact" className="text-foreground/80 hover:text-foreground transition-colors">
               Contact
             </Link>
-            <Button variant="outline" size="sm" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-              {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
-            </Button>
             <Button asChild size="sm">
               <Link href="/resume">Resume</Link>
             </Button>
@@ -63,9 +58,6 @@ export default function Navbar() {
 
           {/* Mobile Navigation Toggle */}
           <div className="flex items-center md:hidden space-x-4">
-            <Button variant="outline" size="sm" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-              {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
-            </Button>
             <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? <X /> : <Menu />}
             </Button>

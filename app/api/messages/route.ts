@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import clientPromise from "@/lib/db";
 import { getCollection, ObjectId } from "@/lib/db";
+import { requireAuth } from "@/lib/middleware";
 
 export async function GET(req: NextRequest) {
   try {
@@ -95,6 +95,15 @@ export async function POST(req: NextRequest) {
 
 // API to mark message as read
 export async function PATCH(req: NextRequest) {
+  // Check authentication first
+  const auth = await requireAuth(req)
+  if (!auth.valid) {
+    return NextResponse.json(
+      { error: auth.error || "Unauthorized" },
+      { status: 401 }
+    )
+  }
+
   try {
     const { id, read } = await req.json();
     

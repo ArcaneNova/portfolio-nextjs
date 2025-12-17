@@ -2,16 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/lib/db";
 import ChallengeModel from "@/lib/models/challenge";
 import { uploadImage } from "@/lib/cloudinary";
+import { requireAuth } from "@/lib/middleware";
 
 interface Params {
   id: string;
 }
 
-export async function GET(req: NextRequest, { params }: { params: Params }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<Params> }) {
   try {
     await connect();
     
-    const { id } = params;
+    const { id } = await params;
     
     const challenge = await ChallengeModel.findById(id).lean();
     
@@ -32,11 +33,20 @@ export async function GET(req: NextRequest, { params }: { params: Params }) {
   }
 }
 
-export async function POST(req: NextRequest, { params }: { params: Params }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<Params> }) {
+  // Check authentication first
+  const auth = await requireAuth(req)
+  if (!auth.valid) {
+    return NextResponse.json(
+      { error: auth.error || "Unauthorized" },
+      { status: 401 }
+    )
+  }
+
   try {
     await connect();
     
-    const { id } = params;
+    const { id } = await params;
     
     const challenge = await ChallengeModel.findById(id);
     
@@ -108,11 +118,20 @@ export async function POST(req: NextRequest, { params }: { params: Params }) {
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: Params }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<Params> }) {
+  // Check authentication first
+  const auth = await requireAuth(req)
+  if (!auth.valid) {
+    return NextResponse.json(
+      { error: auth.error || "Unauthorized" },
+      { status: 401 }
+    )
+  }
+
   try {
     await connect();
     
-    const { id } = params;
+    const { id } = await params;
     const { updateDay } = await req.json();
     
     if (!updateDay) {
@@ -132,13 +151,13 @@ export async function DELETE(req: NextRequest, { params }: { params: Params }) {
     }
     
     // Filter out the update with the given day
-    const updatedUpdates = challenge.updates?.filter(update => update.day !== updateDay) || [];
+    const updatedUpdates = challenge.updates?.filter((update: any) => update.day !== updateDay) || [];
     challenge.updates = updatedUpdates;
     
     // If we removed the latest update, find new latest update
     if (challenge.currentDay === updateDay) {
       if (updatedUpdates.length > 0) {
-        const newLatest = updatedUpdates.reduce((prev, current) => 
+        const newLatest = updatedUpdates.reduce((prev: any, current: any) => 
           (prev.day > current.day) ? prev : current
         );
         challenge.currentDay = newLatest.day;

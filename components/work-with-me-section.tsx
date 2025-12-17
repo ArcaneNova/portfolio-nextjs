@@ -59,7 +59,7 @@ export default function WorkWithMeSection() {
             <div className="space-y-4">
               {services.map((service, index) => (
                 <motion.div
-                  key={index}
+                  key={service.title}
                   className="flex items-start space-x-3"
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}

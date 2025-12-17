@@ -28,154 +28,192 @@ export default function WordsILiveBySection() {
   // Categories of quotes
   const quoteCategories = [
     {
+      id: "ai-innovation",
+      title: "AI & Innovation",
+      icon: <CircuitBoard className="w-5 h-5" />,
+      color: "cyber-cyan",
+      quotes: [
+        {
+          text: "The future is not something that happens to you. It's something you create. And that creation increasingly depends on AI.",
+          author: "Personal Mantra",
+          caption: "Build the future now, don't wait for it."
+        },
+        {
+          text: "Artificial Intelligence will be either the best or worst thing ever to happen to humanity. Make sure you're building it right.",
+          author: "Elon Musk (Inspired)",
+          caption: "Responsibility meets ambition."
+        },
+        {
+          text: "The AI you build today will define the world someone else inherits tomorrow.",
+          author: "Personal Mantra",
+          caption: "Build with intention. Build with impact."
+        },
+        {
+          text: "Machine learning isn't magic — it's the ability to learn from patterns humans couldn't see alone.",
+          author: "Personal Mantra",
+          caption: "You're not building algorithms. You're building insight."
+        },
+        {
+          text: "First principles thinking applied to AI: Why do we build what we build? What problem does it truly solve?",
+          author: "Elon Musk (Inspired)",
+          caption: "Question everything. Build fearlessly."
+        },
+        {
+          text: "The most exciting AI products will come from people insane enough to see possibilities nobody else does.",
+          author: "Personal Mantra",
+          caption: "Your 'crazy idea' is the next revolution."
+        }
+      ]
+    },
+    {
       id: "motivational",
       title: "Motivational",
       icon: <Star className="w-5 h-5" />,
       color: "cyber-orange",
       quotes: [
         {
-          text: "Trust the process. Outcomes are noisy. Growth is real.",
+          text: "The people you work with matter more than the salary you get. Surround yourself with people who push you to be 10x better.",
           author: "Personal Mantra",
-          caption: "You may not win today, but if you're learning, you're not losing."
+          caption: "Excellence is contagious. Choose your circle wisely."
         },
         {
-          text: "Dream so big that it scares you — and stay humble enough to build from zero every time.",
+          text: "Dream so big that it terrifies you. Then execute with precision that terrifies your competitors.",
           author: "Personal Mantra",
-          caption: "If your dreams don't sound crazy, dream bigger."
+          caption: "Ambition + Execution = Legacy."
         },
         {
-          text: "You don't need permission to start. Start messy. Learn fast. Fix later.",
+          text: "You're not just building products. You're building a mission. Make it matter.",
           author: "Personal Mantra",
-          caption: "This is how solo founders win."
+          caption: "Purpose is the fuel that never runs out."
         },
         {
-          text: "If you keep showing up — you'll either win or be too good to ignore.",
+          text: "If you're not uncomfortable, you're not growing. Comfort is the enemy of greatness.",
           author: "Personal Mantra",
-          caption: ""
+          caption: "Embrace the struggle. That's where the magic happens."
         },
         {
-          text: "The harder you work, the luckier you get.",
-          author: "Gary Player",
-          caption: ""
+          text: "The number of hours you work is irrelevant. What matters is the dent you make in the universe.",
+          author: "Elon Musk (Inspired)",
+          caption: "Impact over burnout. Always."
         },
         {
-          text: "The best time to plant a tree was 20 years ago. The second best time is now.",
-          author: "Chinese Proverb",
-          caption: "Never too late to begin."
+          text: "Every 'no' gets you closer to the 'yes' that changes everything.",
+          author: "Personal Mantra",
+          caption: "Resilience is a skill. Practice it daily."
         }
       ]
     },
     {
       id: "coding",
-      title: "Coding",
+      title: "Engineering",
       icon: <Zap className="w-5 h-5" />,
-      color: "cyber-cyan",
+      color: "neon-green",
       quotes: [
         {
-          text: "Clean code always looks like it was written by someone who cares.",
-          author: "Robert C. Martin",
-          caption: ""
-        },
-        {
-          text: "Every SaaS, every product, every tool I build — is a quiet thank you to the life I've been given.",
+          text: "Code is a conversation with the future. Write it so that your future self — and better minds — can understand and improve it.",
           author: "Personal Mantra",
-          caption: "I code with gratitude."
+          caption: "Clean code is a gift to collaborators."
         },
         {
-          text: "Code is like humor. When you have to explain it, it's bad.",
-          author: "Cory House",
-          caption: ""
-        },
-        {
-          text: "Build in silence. Let the product speak. Let the value scream.",
+          text: "Systems thinking > clever code. A simple system that scales beats a genius algorithm nobody understands.",
           author: "Personal Mantra",
-          caption: ""
+          caption: "Build for humans. Build for scale."
         },
         {
-          text: "Programming isn't about what you know; it's about what you can figure out.",
-          author: "Chris Pine",
-          caption: ""
-        },
-        {
-          text: "Start with impact, stay with discipline, scale with patience.",
+          text: "The best engineers aren't the ones who code the most. They're the ones who solve the hardest problems with the least code.",
           author: "Personal Mantra",
-          caption: ""
+          caption: "Simplicity is sophistication."
+        },
+        {
+          text: "Robotics teaches you that code affects the physical world. Respect that power. Test everything. Fail safely.",
+          author: "Personal Mantra",
+          caption: "Your code might move a machine. Make it count."
+        },
+        {
+          text: "A production-ready system that works beats a perfect prototype that never ships.",
+          author: "Personal Mantra",
+          caption: "Ship it. Learn from it. Scale it."
+        },
+        {
+          text: "The most valuable code is the code you never have to maintain.",
+          author: "Personal Mantra",
+          caption: "Elegance through architecture, not complexity."
         }
       ]
     },
     {
       id: "mindfulness",
-      title: "Mindfulness",
+      title: "Mindset & Growth",
       icon: <Heart className="w-5 h-5" />,
       color: "neon-purple",
       quotes: [
         {
-          text: "We're all human — emotional, imperfect, learning. What matters is that we grow, not that we're perfect.",
+          text: "Your network determines your net worth. Invest in relationships with people who are where you want to be.",
           author: "Personal Mantra",
-          caption: ""
+          caption: "You are the average of the five people you spend the most time with."
         },
         {
-          text: "Some people won't choose you. That's okay. Everyone has their own journey, timing, and truth.",
+          text: "Mediocrity is a choice. Excellence is a standard. Choose wisely, and let your choices define your circle.",
           author: "Personal Mantra",
-          caption: ""
+          caption: "Raise the bar. Attract excellence."
         },
         {
-          text: "Being kind is never wasted. Be gentle with people, animals, and life itself.",
+          text: "Learning never stops. The moment you think you know everything is the moment you stop growing.",
           author: "Personal Mantra",
-          caption: ""
+          caption: "Curiosity is your superpower."
         },
         {
-          text: "It is not the man who has too little, but the man who craves more, that is poor.",
-          author: "Seneca",
-          caption: ""
+          text: "Being around people smarter than you is uncomfortable. That discomfort is proof you're evolving.",
+          author: "Personal Mantra",
+          caption: "Seek mentors. Become one."
         },
         {
-          text: "Your mind is a garden. Your thoughts are the seeds. You can grow flowers or you can grow weeds.",
-          author: "Anonymous",
-          caption: ""
+          text: "Patience is not waiting. It's progressing with intention while the world doubts you.",
+          author: "Personal Mantra",
+          caption: "Overnight success takes 10 years. Build anyway."
         },
         {
-          text: "The quality of your life is determined by the focus of your attention.",
-          author: "Cheri Huber",
-          caption: ""
+          text: "Your perspective is limited by your experiences. Travel. Read. Build. Meet visionaries. Expand.",
+          author: "Personal Mantra",
+          caption: "The world is your classroom."
         }
       ]
     },
     {
       id: "creativity",
-      title: "Creativity",
+      title: "Vision & Breakthrough",
       icon: <Lightbulb className="w-5 h-5" />,
-      color: "neon-green",
+      color: "cyber-orange",
       quotes: [
         {
-          text: "Creativity is intelligence having fun.",
-          author: "Albert Einstein",
-          caption: ""
+          text: "First principles: Why does it exist? Can I rebuild it better? If yes, do it.",
+          author: "Elon Musk (Inspired)",
+          caption: "Most breakthroughs come from questioning the obvious."
         },
         {
-          text: "The best way to predict the future is to create it.",
-          author: "Peter Drucker",
-          caption: ""
+          text: "The best ideas sound crazy until they're not. If it's obviously possible, someone else is already doing it.",
+          author: "Personal Mantra",
+          caption: "Think differently or don't think at all."
         },
         {
-          text: "Every problem is a gift - without problems we would not grow.",
-          author: "Tony Robbins",
-          caption: ""
+          text: "Innovation isn't about being smarter. It's about connecting dots others haven't seen yet.",
+          author: "Personal Mantra",
+          caption: "Every genius was once called mad."
         },
         {
-          text: "Innovation distinguishes between a leader and a follower.",
-          author: "Steve Jobs",
-          caption: ""
+          text: "The people solving trillion-dollar problems today were told their ideas were impossible yesterday.",
+          author: "Personal Mantra",
+          caption: "Impossibility is temporary. Vision is eternal."
         },
         {
-          text: "The world makes way for the person who knows where they are going.",
-          author: "Ralph Waldo Emerson",
-          caption: ""
+          text: "Build like you're competing against the smartest people on Earth. Because you might be.",
+          author: "Personal Mantra",
+          caption: "Excellence attracts excellence."
         },
         {
-          text: "Don't find customers for your products, find products for your customers.",
-          author: "Seth Godin",
-          caption: ""
+          text: "Your unique perspective is your unfair advantage. Don't dilute it to fit in.",
+          author: "Personal Mantra",
+          caption: "The world doesn't need more copies. It needs your original."
         }
       ]
     }

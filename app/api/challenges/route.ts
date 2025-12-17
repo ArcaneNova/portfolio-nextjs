@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { connect } from "@/lib/db"
 import ChallengeModel from "@/lib/models/challenge"
 import { uploadImage } from "@/lib/cloudinary"
+import { requireAuth } from "@/lib/middleware"
 
 export async function GET(req: NextRequest) {
   try {
@@ -36,22 +37,52 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  // Check authentication first
+  const auth = await requireAuth(req)
+  if (!auth.valid) {
+    return NextResponse.json(
+      { error: auth.error || "Unauthorized" },
+      { status: 401 }
+    )
+  }
+
   try {
     await connect()
 
     const formData = await req.formData()
     
-    const title = formData.get("title") as string
-    const description = formData.get("description") as string
-    const startDate = formData.get("startDate") as string
-    const totalDays = parseInt(formData.get("totalDays") as string)
+    const title = formData.get("title")
+    const description = formData.get("description")
+    const startDate = formData.get("startDate")
+    const totalDaysStr = formData.get("totalDays")
+    
+    // Validate required fields
+    if (
+      typeof title !== "string" || !title.trim() ||
+      typeof description !== "string" || !description.trim() ||
+      typeof startDate !== "string" || !startDate.trim() ||
+      typeof totalDaysStr !== "string"
+    ) {
+      return NextResponse.json(
+        { error: "Missing or invalid required fields" },
+        { status: 400 }
+      )
+    }
+    
+    const totalDays = parseInt(totalDaysStr)
+    if (isNaN(totalDays) || totalDays <= 0) {
+      return NextResponse.json(
+        { error: "Total days must be a positive number" },
+        { status: 400 }
+      )
+    }
     
     // Handle image upload
-    const imageFile = formData.get("image") as File
+    const imageFile = formData.get("image")
     
-    if (!title || !description || !startDate || !totalDays || !imageFile) {
+    if (!(imageFile instanceof File)) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Image file is required" },
         { status: 400 }
       )
     }
@@ -84,6 +115,15 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  // Check authentication first
+  const auth = await requireAuth(req)
+  if (!auth.valid) {
+    return NextResponse.json(
+      { error: auth.error || "Unauthorized" },
+      { status: 401 }
+    )
+  }
+
   try {
     await connect()
 

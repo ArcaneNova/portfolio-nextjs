@@ -1,8 +1,7 @@
 import { connect } from "@/lib/db"
-import mongoose from "mongoose"
+import BlogPost from "@/lib/models/blog"
 import { BlogClient } from "@/components/admin/blog-client"
 
-// Define BlogPost interface to match the schema
 interface BlogPost {
   _id?: string
   title: string
@@ -20,21 +19,10 @@ interface BlogPost {
 }
 
 async function getBlogPosts() {
-  await connect()
   try {
-    // Get the collection directly since we don't have the model imported
-    const db = mongoose.connection.db
-    if (!db) {
-      throw new Error("Database connection not established")
-    }
-    const collection = db.collection("blogposts")
-    const posts = await collection.find({}).sort({ date: -1 }).toArray()
-    
-    // Convert MongoDB documents to plain objects and format the _id
-    return JSON.parse(JSON.stringify(posts.map(post => ({
-      ...post,
-      _id: post._id.toString()
-    })))) as BlogPost[]
+    await connect()
+    const posts = await BlogPost.find({}).sort({ date: -1 }).lean()
+    return JSON.parse(JSON.stringify(posts))
   } catch (error) {
     console.error("Error fetching blog posts:", error)
     return []
@@ -43,7 +31,6 @@ async function getBlogPosts() {
 
 export default async function BlogPage() {
   const posts = await getBlogPosts()
-  
-  // Pass data to client component
+
   return <BlogClient posts={posts} />
 } 

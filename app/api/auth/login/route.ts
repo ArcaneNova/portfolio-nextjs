@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getCollection } from "@/lib/db"
+import { generateToken } from "@/lib/auth"
 import bcrypt from "bcryptjs"
 
 export async function POST(req: NextRequest) {
@@ -37,12 +38,20 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if admin is active
-    if (!admin.isActive) {
+    if (admin.isActive === false) {
       return NextResponse.json(
         { error: "Account is deactivated" },
         { status: 401 }
       )
     }
+
+    // Generate JWT token
+    const token = generateToken({
+      id: admin._id.toString(),
+      email: admin.email,
+      name: admin.name,
+      role: admin.role,
+    })
 
     // Update last login
     await adminsCollection.updateOne(
@@ -50,17 +59,29 @@ export async function POST(req: NextRequest) {
       { $set: { lastLogin: new Date(), updatedAt: new Date() } }
     )
 
-    // Return success response
-    return NextResponse.json({
+    // Create response with secure cookie
+    const response = NextResponse.json({
       success: true,
       message: "Login successful",
+      token,
       admin: {
-        id: admin._id,
+        id: admin._id.toString(),
         email: admin.email,
         name: admin.name,
         role: admin.role,
       },
     })
+
+    // Set secure HTTP-only cookie
+    response.cookies.set('admin-token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+      path: '/',
+    })
+
+    return response
 
   } catch (error) {
     console.error("Login error:", error)

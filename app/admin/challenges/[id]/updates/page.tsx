@@ -4,9 +4,9 @@ import ChallengeModel from "@/lib/models/challenge";
 import { ChallengeUpdatesClient } from "@/components/admin/challenge-updates-client";
 
 interface UpdatesPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 async function getChallengeWithUpdates(id: string) {
@@ -28,11 +28,12 @@ async function getChallengeWithUpdates(id: string) {
 }
 
 export default async function ChallengeUpdatesPage({ params }: UpdatesPageProps) {
-  const { challenge, updates } = await getChallengeWithUpdates(params.id);
+  const { id } = await params;
+  const { challenge, updates } = await getChallengeWithUpdates(id);
   
   // Pass data to client component
   return <ChallengeUpdatesClient 
-    challengeId={params.id}
+    challengeId={id}
     initialChallenge={challenge}
     initialUpdates={updates}
   />;
