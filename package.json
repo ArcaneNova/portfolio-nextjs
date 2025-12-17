@@ -68,7 +68,7 @@
     "mongodb": "latest",
     "mongodb-client-encryption": "latest",
     "mongoose": "^9.0.1",
-    "next": "15.2.4",
+    "next": "latest",
     "next-seo": "^6.8.0",
     "next-themes": "latest",
     "react": "^19",
