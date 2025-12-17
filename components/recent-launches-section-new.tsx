@@ -129,7 +129,7 @@ export default function RecentLaunchesSection() {
               const config = statusConfig[launch.status]
               return (
                 <motion.div
-                  key={launch.id}
+                  key={launch._id}
                   className={`group bg-ai-slate/50 border ${config.border} rounded-lg p-6 hover:border-ai-cyan/30 transition-all`}
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
